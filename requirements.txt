@@ -1,0 +1,6 @@
+aiogram==2.25.1
+aiosqlite==0.20.0
+apscheduler==3.10.4
+matplotlib==3.9.2
+python-dotenv==1.0.1
+Requests==2.32.3
