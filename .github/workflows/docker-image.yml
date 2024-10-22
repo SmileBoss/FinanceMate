@@ -35,8 +35,8 @@ jobs:
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
             sudo docker stop main_container
