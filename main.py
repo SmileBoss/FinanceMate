@@ -42,6 +42,9 @@ async def on_startup(dispatcher):
 
     goal_manager.start()
 
+    print("Бот успешно запущен!")
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+
