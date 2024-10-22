@@ -3,29 +3,21 @@ import io
 
 import aiosqlite
 from matplotlib import pyplot as plt
+from user_manager import UserManager
 
 
 class FinanceManager:
     def __init__(self, db_name):
         self.db_name = db_name
+        self.user_manager = UserManager(db_name)
 
+    categories_income = ["Зарплата", "Бонусы", "Подарки", "Инвестиции", "Другое"]
+    categories_expense = ["Продукты", "Транспорт", "Развлечения", "Оплата жилья", "Другое"]
 
-    async def get_user_id(self, telegram_id):
-        async with aiosqlite.connect(self.db_name) as db:
-            async with db.execute('SELECT id FROM users WHERE telegram_id = ?', (telegram_id,)) as cursor:
-                user = await cursor.fetchone()
-                if user:
-                    return user[0]
-                else:
-                    await db.execute('INSERT INTO users (telegram_id) VALUES (?)', (telegram_id,))
-                    await db.commit()
-                    async with db.execute('SELECT id FROM users WHERE telegram_id = ?', (telegram_id,)) as cursor:
-                        user = await cursor.fetchone()
-                        return user[0]
 
 
     async def add_income(self, telegram_id, category, amount, currency):
-        user_id = await self.get_user_id(telegram_id)
+        user_id = await self.user_manager.get_user_id(telegram_id)
         async with aiosqlite.connect(self.db_name) as db:
             await db.execute('''
                 INSERT INTO income (user_id, category, amount, currency, date)
@@ -35,7 +27,7 @@ class FinanceManager:
 
 
     async def add_expense(self, telegram_id, category, amount, currency):
-        user_id = await self.get_user_id(telegram_id)
+        user_id = await self.user_manager.get_user_id(telegram_id)
         async with aiosqlite.connect(self.db_name) as db:
             await db.execute('''
                 INSERT INTO expenses (user_id, category, amount, currency, date)
@@ -45,7 +37,7 @@ class FinanceManager:
 
 
     async def get_statistics(self, telegram_id):
-        user_id = await self.get_user_id(telegram_id)
+        user_id = await self.user_manager.get_user_id(telegram_id)
         income_data = []
         expenses_data = []
         async with aiosqlite.connect(self.db_name) as db:
@@ -67,7 +59,7 @@ class FinanceManager:
         return statistics
 
     async def create_statistics_chart(self, telegram_id):
-        user_id = await self.get_user_id(telegram_id)
+        user_id = await self.user_manager.get_user_id(telegram_id)
 
         income_data = {}
         expenses_data = {}

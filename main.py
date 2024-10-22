@@ -1,42 +1,46 @@
 import logging
+import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.types import ParseMode
 from aiogram.utils import executor
+from dotenv import load_dotenv
 
-from BotController import BotController
-from CurrencyManager import CurrencyManager
-from DatabaseManager import DatabaseManager
-from FinanceManager import FinanceManager
+from bot_controller import BotController
+from currency_manager import CurrencyManager
+from database_manager import DatabaseManager
+from finance_manager import FinanceManager
+from goal_manager import GoalManager
+from user_manager import UserManager
 
-API_TOKEN = '7718869677:AAF7481qS0dyQOI6m237cQLyok8Qy5QPFhE'
+load_dotenv()
 
-# Задаем уровень логирования
+API_TOKEN = os.getenv('API_TOKEN')
+
 logging.basicConfig(level=logging.INFO)
 
-# Инициализация бота и диспетчера
 bot = Bot(token=API_TOKEN, parse_mode=ParseMode.MARKDOWN_V2)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 dp.middleware.setup(LoggingMiddleware())
 
-# Инициализация менеджеров
-finance_manager = FinanceManager("finances.db")
+user_manager = UserManager("./app_data/finances.db")
+finance_manager = FinanceManager("./app_data/finances.db")
 currency_manager = CurrencyManager()
-db_manager = DatabaseManager('finances.db')
+db_manager = DatabaseManager('./app_data/finances.db')
+goal_manager = GoalManager(bot, './app_data/finances.db')
 
-# Определение и инициализация контроллера
-bot_controller = BotController(bot, dp, finance_manager, currency_manager, db_manager)
+bot_controller = BotController(bot, dp, finance_manager, currency_manager, db_manager, goal_manager, user_manager)
 
 
 async def on_startup(dispatcher):
-    # Установить команды при старте
     await bot_controller.set_commands()
 
-    # Инициализация БД если необходимо
     await db_manager.init_db()
+
+    goal_manager.start()
 
 
 if __name__ == '__main__':
