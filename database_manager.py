@@ -63,4 +63,3 @@ class DatabaseManager:
         async with aiosqlite.connect(self.db_path) as db:
             await db.execute('INSERT OR IGNORE INTO users (telegram_id) VALUES (?)', (telegram_id,))
             await db.commit()
-
