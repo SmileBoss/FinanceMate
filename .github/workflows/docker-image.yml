@@ -35,7 +35,7 @@ jobs:
         uses: garygrossgarten/github-action-ssh@v0.1.0
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
+          username: shirmanov
           privateKey: ${{ secrets.KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
