@@ -32,12 +32,11 @@ jobs:
       needs: build_and_push_to_docker_hub
       steps:
       - name: Execute remote ssh commands to deploy
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
           script: |
             sudo docker stop main_container
             sudo docker system prune -a -f
