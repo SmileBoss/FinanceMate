@@ -3,6 +3,7 @@ import io
 
 import aiosqlite
 from matplotlib import pyplot as plt
+
 from user_manager import UserManager
 
 
@@ -14,8 +15,6 @@ class FinanceManager:
     categories_income = ["Зарплата", "Бонусы", "Подарки", "Инвестиции", "Другое"]
     categories_expense = ["Продукты", "Транспорт", "Развлечения", "Оплата жилья", "Другое"]
 
-
-
     async def add_income(self, telegram_id, category, amount, currency):
         user_id = await self.user_manager.get_user_id(telegram_id)
         async with aiosqlite.connect(self.db_name) as db:
@@ -25,7 +24,6 @@ class FinanceManager:
             ''', (user_id, category, amount, currency, datetime.datetime.now().isoformat()))
             await db.commit()
 
-
     async def add_expense(self, telegram_id, category, amount, currency):
         user_id = await self.user_manager.get_user_id(telegram_id)
         async with aiosqlite.connect(self.db_name) as db:
@@ -34,7 +32,6 @@ class FinanceManager:
                 VALUES (?, ?, ?, ?, ?)
             ''', (user_id, category, amount, currency, datetime.datetime.now().isoformat()))
             await db.commit()
-
 
     async def get_statistics(self, telegram_id):
         user_id = await self.user_manager.get_user_id(telegram_id)

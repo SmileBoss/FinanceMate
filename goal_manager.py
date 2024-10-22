@@ -1,7 +1,9 @@
 from datetime import datetime
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from user_manager import UserManager
+
 import aiosqlite
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+from user_manager import UserManager
 
 
 class GoalManager:
@@ -117,4 +119,3 @@ class GoalManager:
         self.scheduler.add_job(self.send_reminders, 'interval', minutes=1)
         self.scheduler.add_job(self.check_goals, 'interval', minutes=1)
         self.scheduler.start()
-
