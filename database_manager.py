@@ -5,6 +5,7 @@ class DatabaseManager:
     def __init__(self, db_path: str):
         self.db_path = db_path
 
+
     async def init_db(self):
         async with aiosqlite.connect(self.db_path) as db:
             await db.execute('''
@@ -56,6 +57,7 @@ class DatabaseManager:
                         )
             ''')
             await db.commit()
+
 
     async def add_user(self, telegram_id: int):
         async with aiosqlite.connect(self.db_path) as db:
