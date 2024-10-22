@@ -32,7 +32,7 @@ jobs:
       needs: build_and_push_to_docker_hub
       steps:
       - name: Execute remote ssh commands to deploy
-        uses: appleboy/ssh-action@v1.1.0
+        uses: garygrossgarten/github-action-ssh@v0.1.0
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
