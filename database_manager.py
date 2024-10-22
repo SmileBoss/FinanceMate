@@ -35,29 +35,30 @@ class DatabaseManager:
                                     FOREIGN KEY(user_id) REFERENCES users(id)
                                 )
                             ''')
-            # await db.execute('''
-            #             CREATE TABLE financial_goals (
-            #                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-            #                 user_id INTEGER,
-            #                 goal_name TEXT,
-            #                 target_amount REAL,
-            #                 deadline DATE,
-            #                 current_amount REAL DEFAULT 0,
-            #                 FOREIGN KEY (user_id) REFERENCES users(id)
-            #             )
-            # ''')
-            # await db.execute('''
-            #             CREATE TABLE reminders (
-            #                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-            #                 user_id INTEGER,
-            #                 message TEXT,
-            #                 remind_at TIMESTAMP,
-            #                 FOREIGN KEY (user_id) REFERENCES users(id)
-            #             )
-            # ''')
+            await db.execute('''
+                        CREATE TABLE IF NOT EXISTS financial_goals (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            user_id INTEGER,
+                            goal_name TEXT,
+                            target_amount REAL,
+                            deadline DATE,
+                            current_amount REAL DEFAULT 0,
+                            FOREIGN KEY (user_id) REFERENCES users(id)
+                        )
+            ''')
+            await db.execute('''
+                        CREATE TABLE IF NOT EXISTS reminders (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            user_id INTEGER,
+                            message TEXT,
+                            remind_at TIMESTAMP,
+                            FOREIGN KEY (user_id) REFERENCES users(id)
+                        )
+            ''')
             await db.commit()
 
     async def add_user(self, telegram_id: int):
         async with aiosqlite.connect(self.db_path) as db:
             await db.execute('INSERT OR IGNORE INTO users (telegram_id) VALUES (?)', (telegram_id,))
             await db.commit()
+
