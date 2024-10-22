@@ -38,7 +38,7 @@ jobs:
           username: shirmanov
           privateKey: ${{ secrets.KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-          script: |
+          command: |
             sudo docker stop main_container
             sudo docker system prune -a -f
             sudo docker pull nikitashirmanov1337/finance_mate_tg_bot
